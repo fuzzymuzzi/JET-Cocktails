@@ -2,8 +2,8 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import App from './App'
 
-test('should render welcome message', () => {
+test('should render a cocktail detail wrapper', () => {
   render(<App />)
-  const linkElement = screen.getByText(/Yay Cocktails!/)
-  expect(linkElement).toBeInTheDocument()
+  const CocktailDetailWrapper = screen.getByTestId('cocktail-details-fragment')
+  expect(CocktailDetailWrapper).toBeInTheDocument()
 })

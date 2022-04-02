@@ -1,6 +1,7 @@
 import React from 'react'
 
 import { Grommet } from 'grommet'
+import CocktailDetails from './CocktailDetails'
 
 const theme = {
   global: {
@@ -18,7 +19,7 @@ const theme = {
 const App: React.FC<unknown> = () => {
   return (
     <Grommet theme={theme} full>
-      <div>Yay Cocktails!</div>
+      <CocktailDetails data-testid={'cocktail-details-fragment'} />
     </Grommet>
   )
 }
