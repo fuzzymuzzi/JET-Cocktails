@@ -1,6 +1,6 @@
 import { Box, BoxProps, TextInput, Spinner } from 'grommet'
 import { Search } from 'grommet-icons'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
 import constructDebouncedCall from '../utils/constructDebouncedCall'
@@ -28,26 +28,29 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
 
   const api = useCocktailsApi()
 
-  const getCocktailsByQuery = useCallback(
-    constructDebouncedCall(async () => {
-      setIsFetching(true)
-      try {
-        const cocktails = await api.getRandomCocktail()
-        setCocktailOptions(cocktails)
-        setIsFetching(false)
-      } catch (error) {
-        setIsFetching(false)
-        console.error(error)
-      }
-    }),
+  const getCocktailsByQuery = useMemo(
+    () =>
+      constructDebouncedCall(async (query: string) => {
+        setIsFetching(true)
+        try {
+          const cocktails = await api.getCocktailsByQuery(query)
+          setCocktailOptions(cocktails)
+          setIsFetching(false)
+        } catch (error) {
+          setIsFetching(false)
+          console.error(error)
+        }
+      }),
     [],
   )
 
   useEffect(() => {
-    if (query.length > 0) {
-      getCocktailsByQuery()
+    if (query) {
+      getCocktailsByQuery(query)
     }
   }, [getCocktailsByQuery, query])
+
+  console.log({ cocktailOptions })
 
   return (
     <Box
