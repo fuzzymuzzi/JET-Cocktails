@@ -94,11 +94,6 @@ test('should return an array of converted cocktail data when provided with an th
       instructions: [
         { id: 'EN', label: 'Some instructions' },
         { id: 'ES', label: 'Some other instructions' },
-        { id: 'DE', label: null },
-        { id: 'FR', label: null },
-        { id: 'IT', label: null },
-        { id: 'ZH-HANS', label: null },
-        { id: 'ZH-HANT', label: null },
       ],
       measurements: ['Measurement 1', 'Measurement 2'],
       name: 'Some random name',
