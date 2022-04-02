@@ -5,6 +5,7 @@
   "dependencies": {
     "grommet": "^2.22.0",
     "grommet-icons": "^4.7.0",
+    "lodash": "^4.17.21",
     "react": "^17.0.0",
     "react-dom": "^17.0.0",
     "react-scripts": "5.0.0",
@@ -42,6 +43,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.4.1",
+    "@types/lodash": "^4.14.181",
     "@types/node": "^16.11.26",
     "@types/react": "^17.0.43",
     "@types/react-dom": "^17.0.14",

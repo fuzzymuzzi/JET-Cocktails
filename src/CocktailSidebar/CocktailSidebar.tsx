@@ -1,29 +1,60 @@
-import { Box } from 'grommet'
-import { useEffect, useState } from 'react'
+import { Box, BoxProps, TextInput, Spinner } from 'grommet'
+import { Search } from 'grommet-icons'
+import { useCallback, useEffect, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
+import { debounce } from 'lodash'
 
 interface ICocktailSidebarProps {
   onCocktailSelect?: (selectedCocktail: unknown) => {}
 }
 
+const SideBarBox: React.FC<BoxProps> = ({ children, ...props }) => (
+  <Box
+    width='medium'
+    align='center'
+    justify='center'
+    direction='row'
+    {...props}
+  >
+    {children}
+  </Box>
+)
+
+const DEFAULT_DEBOUNCE_TIMEOUT = 500
+
+const constructDebouncedCall = (
+  callback: (params?: unknown) => void,
+  timeout: number = DEFAULT_DEBOUNCE_TIMEOUT,
+) => debounce(callback, timeout)
+
 const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
   const [cocktailOptions, setCocktailOptions] = useState([] as ICocktail[])
+  const [query, setQuery] = useState('')
+  const [isFetching, setIsFetching] = useState(false)
 
   const api = useCocktailsApi()
 
-  const fetchCocktails = async () => {
-    const cocktails = await api.getRandomCocktail()
-    setCocktailOptions(cocktails)
-  }
+  const getCocktailsByQuery = useCallback(
+    constructDebouncedCall(async () => {
+      setIsFetching(true)
+      try {
+        const cocktails = await api.getRandomCocktail()
+        setCocktailOptions(cocktails)
+        setIsFetching(false)
+      } catch (error) {
+        setIsFetching(false)
+        console.error(error)
+      }
+    }),
+    [],
+  )
 
   useEffect(() => {
-    fetchCocktails()
-  }, [])
-
-  useEffect(() => {
-    console.log(cocktailOptions)
-  }, [cocktailOptions])
+    if (query.length > 0) {
+      getCocktailsByQuery()
+    }
+  }, [getCocktailsByQuery, query])
 
   return (
     <Box
@@ -31,10 +62,32 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
       background='light-1'
       elevation='medium'
       align='center'
-      justify='center'
+      justify='start'
+      pad={{ left: 'medium', right: 'medium', vertical: 'large' }}
       {...props}
     >
-      sidebar search and liked
+      <SideBarBox>
+        <TextInput
+          placeholder='Search for cocktails'
+          data-testid={'sidebar-search-input'}
+          value={query}
+          icon={<Search />}
+          onChange={event => {
+            setQuery(event.target.value)
+          }}
+        />
+      </SideBarBox>
+      <SideBarBox pad={{ vertical: 'medium' }}>
+        {isFetching ? (
+          <Spinner
+            data-testid={'sidebar-search-spinner'}
+            size={'large'}
+            message={`Looking for cocktails containing "${query}"`}
+          />
+        ) : (
+          'Sidebar search and likes'
+        )}
+      </SideBarBox>
     </Box>
   )
 }
