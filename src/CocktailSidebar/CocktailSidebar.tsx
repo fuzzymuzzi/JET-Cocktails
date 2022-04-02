@@ -3,7 +3,7 @@ import { Search } from 'grommet-icons'
 import { useCallback, useEffect, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
-import { debounce } from 'lodash'
+import constructDebouncedCall from '../utils/constructDebouncedCall'
 
 interface ICocktailSidebarProps {
   onCocktailSelect?: (selectedCocktail: unknown) => {}
@@ -20,13 +20,6 @@ const SideBarBox: React.FC<BoxProps> = ({ children, ...props }) => (
     {children}
   </Box>
 )
-
-const DEFAULT_DEBOUNCE_TIMEOUT = 500
-
-const constructDebouncedCall = (
-  callback: (params?: unknown) => void,
-  timeout: number = DEFAULT_DEBOUNCE_TIMEOUT,
-) => debounce(callback, timeout)
 
 const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
   const [cocktailOptions, setCocktailOptions] = useState([] as ICocktail[])
