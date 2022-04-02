@@ -4,6 +4,12 @@ import App from './App'
 
 test('should render a cocktail detail wrapper', () => {
   render(<App />)
-  const CocktailDetailWrapper = screen.getByTestId('cocktail-details-fragment')
+  const CocktailDetailWrapper = screen.getByTestId('cocktail-fragment-details')
   expect(CocktailDetailWrapper).toBeInTheDocument()
+})
+
+test('should render a cocktail sidebar', () => {
+  render(<App />)
+  const CocktailSidebarWrapper = screen.getByTestId('cocktail-fragment-sidebar')
+  expect(CocktailSidebarWrapper).toBeInTheDocument()
 })
