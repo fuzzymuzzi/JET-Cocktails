@@ -1,6 +1,7 @@
 import { BoxProps } from 'grommet'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import SideBarBox from '../components/SideBarBox'
+import useCocktailFiltersApi from './hooks/useCocktailFiltersApi'
 import TagInput from './TagInput'
 
 interface ICocktailFilterProps extends BoxProps {
@@ -39,6 +40,24 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
     console.log({ filteredSuggestions })
     setSuggestions(filteredSuggestions)
   }
+
+  const api = useCocktailFiltersApi()
+
+  const getCocktailCategoryFilters = useMemo(
+    () => async () => {
+      try {
+        const categoryFilters = await api.getCategoryFilters()
+        console.log({ categoryFilters })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [],
+  )
+
+  useEffect(() => {
+    getCocktailCategoryFilters()
+  }, [])
 
   return hasFilters ? (
     <SideBarBox {...props}>
