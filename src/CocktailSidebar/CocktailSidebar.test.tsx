@@ -8,6 +8,10 @@ import { testCocktailResponse } from '../../test/data'
 describe('CocktailSidebar', () => {
   beforeEach(() => {
     fetchMock.reset()
+    const defaultResponse = '[]'
+    fetchMock.get('end:/list.php?i=list', defaultResponse)
+    fetchMock.get('end:/list.php?c=list', defaultResponse)
+    fetchMock.get('end:/list.php?g=list', defaultResponse)
   })
 
   test('should render the sidebar message', async () => {

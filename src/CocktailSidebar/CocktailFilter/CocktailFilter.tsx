@@ -4,18 +4,31 @@ import SideBarBox from '../components/SideBarBox'
 import useCocktailFiltersApi from './hooks/useCocktailFiltersApi'
 import TagInput from './TagInput'
 
+interface ICocktailFilters {
+  category: string[]
+  ingredient: string[]
+  glass: string[]
+}
 interface ICocktailFilterProps extends BoxProps {
   hasFilters: boolean
+  onFiltersChange?: (filters: ICocktailFilters) => void
 }
-
-const allSuggestions = ['one', 'two', 'thre', 'four']
 
 const CocktailFilter: React.FC<ICocktailFilterProps> = ({
   hasFilters,
+  onFiltersChange,
   ...props
 }) => {
-  const [selectedFilters, setSelectedFilters] = useState(['one', 'two'])
-  const [suggestions, setSuggestions] = useState(allSuggestions)
+  const [categoryFilters, setCategoryFilters] = useState<string[]>([])
+  const [glassFilters, setGlassFilters] = useState<string[]>([])
+  const [ingredientFilters, setIngredientFilters] = useState<string[]>([])
+
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+  const [suggestions, setSuggestions] = useState<string[]>([])
+  const allSuggestions = useMemo(
+    () => categoryFilters.concat(ingredientFilters, glassFilters),
+    [categoryFilters, ingredientFilters, glassFilters],
+  )
 
   const hasFilter = (filter: string) => selectedFilters.includes(filter)
 
@@ -37,7 +50,6 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
         suggestion.toLowerCase().indexOf(value.toLowerCase()) >= 0 &&
         !hasFilter(value),
     )
-    console.log({ filteredSuggestions })
     setSuggestions(filteredSuggestions)
   }
 
@@ -47,7 +59,29 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
     () => async () => {
       try {
         const categoryFilters = await api.getCategoryFilters()
-        console.log({ categoryFilters })
+        setCategoryFilters(categoryFilters)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [],
+  )
+  const getCocktailGlassFilters = useMemo(
+    () => async () => {
+      try {
+        const glassFilters = await api.getGlassFilters()
+        setGlassFilters(glassFilters)
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [],
+  )
+  const getCocktailIngredientFilters = useMemo(
+    () => async () => {
+      try {
+        const ingredientFilters = await api.getIngredientFilters()
+        setIngredientFilters(ingredientFilters)
       } catch (error) {
         console.error(error)
       }
@@ -57,7 +91,26 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
 
   useEffect(() => {
     getCocktailCategoryFilters()
+    getCocktailGlassFilters()
+    getCocktailIngredientFilters()
   }, [])
+
+  useEffect(() => {
+    const filters = {
+      category: categoryFilters.filter((filter: string) =>
+        selectedFilters.includes(filter),
+      ),
+      glass: glassFilters.filter((filter: string) =>
+        selectedFilters.includes(filter),
+      ),
+      ingredient: ingredientFilters.filter((filter: string) =>
+        selectedFilters.includes(filter),
+      ),
+    }
+    if (onFiltersChange) {
+      onFiltersChange(filters)
+    }
+  }, [selectedFilters, onFiltersChange])
 
   return hasFilters ? (
     <SideBarBox {...props}>
@@ -68,7 +121,9 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
         selectedTags={selectedFilters}
         onRemove={onRemoveFilter}
         onAdd={onAddFilter}
-        onChange={event => onFilterSuggestion(event.target.value)}
+        onChange={event => {
+          onFilterSuggestion(event.target.value)
+        }}
         a11yTitle='Filter on Ingredients, categories or glass'
       />
     </SideBarBox>

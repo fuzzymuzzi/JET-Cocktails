@@ -6,10 +6,7 @@ import '@testing-library/jest-dom'
 
 import fetchMock from 'fetch-mock'
 
-beforeAll(() => {
-  fetchMock.get('*', JSON.stringify([]))
-})
-
 afterEach(() => {
   fetchMock.reset()
+  fetchMock.get('*', JSON.stringify([]))
 })
