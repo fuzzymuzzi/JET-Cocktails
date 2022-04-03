@@ -14,7 +14,7 @@ describe('CocktailSidebar', () => {
     fetchMock.get('end:/list.php?g=list', defaultResponse)
   })
 
-  test('should render the sidebar message', async () => {
+  test('should render the sidebar message when there been no query', async () => {
     render(<CocktailSidebar />)
     // eslint-disable-next-line testing-library/prefer-find-by
     const textElement = await screen.findByText(/Sidebar search and likes/)
@@ -57,5 +57,111 @@ describe('CocktailSidebar', () => {
 
     const filterEl = screen.queryByTestId('sidebar-filter-input')
     expect(filterEl).not.toBeInTheDocument()
+  })
+
+  test('should only render the cocktails matching all selected filters when a search has been completed and filter(s) have been applied', async () => {
+    const testGlassFilter = 'test-glass'
+    const testCategoryFilter = 'test-category'
+    const testIngredientFilter = 'test-ingredient'
+    const testResponse = {
+      drinks: [
+        {
+          idDrink: '1337',
+          strDrink: 'some-match',
+          strCategory: testCategoryFilter,
+          strGlass: testGlassFilter,
+          strIngredient1: 'Ingredient 1',
+        },
+        {
+          // only this item is expected after all filters are applied
+          idDrink: '42',
+          strDrink: 'all-match',
+          strCategory: testCategoryFilter,
+          strGlass: testGlassFilter,
+          strIngredient1: testIngredientFilter,
+        },
+        {
+          idDrink: '123',
+          strDrink: 'a-match',
+          strCategory: 'A Drink Category',
+          strGlass: testGlassFilter,
+          strIngredient1: 'Ingredient 1',
+        },
+      ],
+    }
+    const testQuery = 'test'
+    const searchIdentifier = `end:/search.php?s=${testQuery}`
+    fetchMock.get(searchIdentifier, JSON.stringify(testResponse))
+    fetchMock.get(
+      'end:/list.php?c=list',
+      JSON.stringify({
+        drinks: [
+          {
+            strCategory: 'test-category',
+          },
+        ],
+      }),
+      {
+        overwriteRoutes: true,
+      },
+    )
+    fetchMock.get(
+      'end:/list.php?i=list',
+      JSON.stringify({
+        drinks: [
+          {
+            ['strIngredient1']: 'test-ingredient',
+          },
+        ],
+      }),
+      {
+        overwriteRoutes: true,
+      },
+    )
+    fetchMock.get(
+      'end:/list.php?g=list',
+      JSON.stringify({
+        drinks: [
+          {
+            strGlass: 'test-glass',
+          },
+        ],
+      }),
+      {
+        overwriteRoutes: true,
+      },
+    )
+
+    render(<CocktailSidebar />)
+
+    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    await userEvent.type(searchInputEl, testQuery)
+
+    // initial state after the search
+    let listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(3)
+
+    // open the filter input
+    const filterButtonEl = await screen.findByTestId('sidebar-filter-button')
+    await userEvent.click(filterButtonEl)
+
+    // start applying filters
+    const filterInputEl = await screen.findByTestId('sidebar-filter-input')
+    // apply the category filter
+    await userEvent.type(filterInputEl, `${testCategoryFilter}{enter}`)
+    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(2)
+
+    // apply the glass filter
+    await userEvent.type(filterInputEl, `${testGlassFilter}{enter}`)
+    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(2)
+
+    // apply a ingredient filter
+    await userEvent.type(filterInputEl, `${testIngredientFilter}{enter}`)
+    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(1)
+    const allMatchEl = await screen.findByText(/all-match/)
+    expect(allMatchEl).toBeInTheDocument()
   })
 })

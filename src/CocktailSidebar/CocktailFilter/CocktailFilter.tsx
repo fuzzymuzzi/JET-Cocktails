@@ -1,14 +1,10 @@
 import { BoxProps } from 'grommet'
 import { useEffect, useMemo, useState } from 'react'
 import SideBarBox from '../components/SideBarBox'
+import ICocktailFilters from '../interfaces/ICocktailFilters'
 import useCocktailFiltersApi from './hooks/useCocktailFiltersApi'
 import TagInput from './TagInput'
 
-interface ICocktailFilters {
-  category: string[]
-  ingredient: string[]
-  glass: string[]
-}
 interface ICocktailFilterProps extends BoxProps {
   hasFilters: boolean
   onFiltersChange?: (filters: ICocktailFilters) => void

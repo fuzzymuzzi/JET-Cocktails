@@ -7,6 +7,7 @@ import constructDebouncedCall from '../utils/constructDebouncedCall'
 import CocktailList from './CocktailList'
 import SideBarBox from './components/SideBarBox'
 import CocktailFilter from './CocktailFilter'
+import ICocktailFilters from './interfaces/ICocktailFilters'
 
 interface ICocktailSidebarProps {
   onCocktailSelect?: (selectedCocktail: unknown) => {}
@@ -46,6 +47,43 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
   const [selectedCocktail, setSelectedCocktail] = useState<ICocktail>()
 
   const [hasFilters, setHasFilters] = useState(false)
+  const [selectedFilters, setSelectedFilters] = useState<ICocktailFilters>({
+    category: [],
+    ingredient: [],
+    glass: [],
+  })
+
+  const filteredCocktailOptions = useMemo(
+    () =>
+      cocktailOptions.filter(cocktail => {
+        const {
+          ingredient: ingredientFilters,
+          glass: glassFilters,
+          category: categoryFilters,
+        } = selectedFilters
+
+        const hasIngredientFilters = ingredientFilters.length > 0
+        const hasCategoryFilters = categoryFilters.length > 0
+        const hasGlassFilters = glassFilters.length > 0
+
+        let filters = []
+
+        if (hasCategoryFilters) {
+          filters.push(categoryFilters.includes(cocktail.category || ''))
+        }
+        if (hasGlassFilters) {
+          filters.push(glassFilters.includes(cocktail.glass || ''))
+        }
+        if (hasIngredientFilters) {
+          ingredientFilters.forEach(filter => {
+            filters.push(cocktail.ingredients.includes(filter))
+          })
+        }
+
+        return filters.length > 0 ? filters.every(v => v === true) : true
+      }),
+    [cocktailOptions, selectedFilters],
+  )
 
   return (
     <Box
@@ -86,7 +124,10 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
           <Filter color={hasFilters ? 'brand' : ''} />
         </Box>
       </SideBarBox>
-      <CocktailFilter hasFilters={hasFilters} />
+      <CocktailFilter
+        hasFilters={hasFilters}
+        onFiltersChange={setSelectedFilters}
+      />
       {isFetching ? (
         <SideBarBox pad={{ vertical: 'medium' }}>
           <Spinner
@@ -99,7 +140,7 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
       {!isFetching && hasCocktails ? (
         <SideBarBox fill={'horizontal'} direction='column' flex={false}>
           <CocktailList
-            cocktails={cocktailOptions}
+            cocktails={filteredCocktailOptions}
             selectedCocktail={selectedCocktail}
             onCocktailSelect={setSelectedCocktail}
           />
