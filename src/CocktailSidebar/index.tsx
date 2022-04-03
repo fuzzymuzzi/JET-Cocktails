@@ -1,1 +1,1 @@
-export { default } from './CocktailSidebar'
+export { default } from './CocktailSearchbar'

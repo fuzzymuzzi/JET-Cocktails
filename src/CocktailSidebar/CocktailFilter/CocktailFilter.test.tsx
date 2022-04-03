@@ -5,7 +5,7 @@ import CocktailFilter from './CocktailFilter'
 
 import fetchMock from 'fetch-mock'
 
-describe('CocktailSidebar', () => {
+describe('CocktailSearchbarbar', () => {
   beforeEach(() => {
     fetchMock.reset()
     const defaultResponse = '[]'
@@ -17,14 +17,14 @@ describe('CocktailSidebar', () => {
   test('should show the filter input when hasFilters is set to true', async () => {
     render(<CocktailFilter hasFilters={true} />)
 
-    const filterEl = screen.queryByTestId('sidebar-filter-input')
+    const filterEl = screen.queryByTestId('searchbar-filter-input')
     expect(filterEl).toBeInTheDocument()
   })
 
   test('should NOT show the filter input when the filters button is clicked', () => {
     render(<CocktailFilter hasFilters={false} />)
 
-    const filterEl = screen.queryByTestId('sidebar-filter-input')
+    const filterEl = screen.queryByTestId('searchbar-filter-input')
     expect(filterEl).not.toBeInTheDocument()
   })
 
@@ -88,7 +88,7 @@ describe('CocktailSidebar', () => {
       <CocktailFilter hasFilters onFiltersChange={mockedOnFiltersChange} />,
     )
 
-    const inputEl = await screen.findByTestId('sidebar-filter-input')
+    const inputEl = await screen.findByTestId('searchbar-filter-input')
     await userEvent.type(inputEl, 'test-category{enter}')
 
     await waitFor(() => {
@@ -129,7 +129,7 @@ describe('CocktailSidebar', () => {
       })
     })
 
-    const inputEl = await screen.findByTestId('sidebar-filter-input')
+    const inputEl = await screen.findByTestId('searchbar-filter-input')
     await userEvent.type(inputEl, 'test-category{enter}')
 
     await waitFor(() => {

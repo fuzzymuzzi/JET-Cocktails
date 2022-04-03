@@ -5,15 +5,15 @@ import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from '../interfaces/ICocktail'
 import constructDebouncedCall from '../utils/constructDebouncedCall'
 import CocktailList from './CocktailList'
-import SideBarBox from './components/SideBarBox'
+import SearchbarBox from './components/SearchbarBox'
 import CocktailFilter from './CocktailFilter'
 import ICocktailFilters from './interfaces/ICocktailFilters'
 
-interface ICocktailSidebarProps {
+interface ICocktailSearchbarProps {
   onCocktailSelect?: (selectedCocktail: ICocktail) => void
 }
 
-const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
+const CocktailSearchbar: React.FC<ICocktailSearchbarProps> = ({
   onCocktailSelect,
   ...props
 }) => {
@@ -111,10 +111,10 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
       }}
       {...props}
     >
-      <SideBarBox gap='small'>
+      <SearchbarBox gap='small'>
         <TextInput
-          placeholder='Search for cocktails'
-          data-testid={'sidebar-search-input'}
+          placeholder='Search for cocktails names'
+          data-testid={'searchbar-search-input'}
           value={query}
           icon={<Search />}
           onChange={event => {
@@ -128,26 +128,26 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
           onClick={() => {
             setHasFilters(!hasFilters)
           }}
-          data-testid={'sidebar-filter-button'}
+          data-testid={'searchbar-filter-button'}
         >
           <Filter color={hasFilters ? 'brand' : ''} />
         </Box>
-      </SideBarBox>
+      </SearchbarBox>
       <CocktailFilter
         hasFilters={hasFilters}
         onFiltersChange={setSelectedFilters}
       />
       {isFetching ? (
-        <SideBarBox pad={{ vertical: 'medium' }}>
+        <SearchbarBox pad={{ vertical: 'medium' }}>
           <Spinner
-            data-testid={'sidebar-search-spinner'}
+            data-testid={'searchbar-search-spinner'}
             size={'large'}
             message={`Looking for cocktails containing "${query}"`}
           />
-        </SideBarBox>
+        </SearchbarBox>
       ) : null}
       {!isFetching && hasCocktails ? (
-        <SideBarBox fill={'horizontal'} direction='column' flex={false}>
+        <SearchbarBox fill={'horizontal'} direction='column' flex={false}>
           <CocktailList
             cocktails={filteredCocktailOptions}
             selectedCocktail={selectedCocktail}
@@ -158,14 +158,14 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
               }
             }}
           />
-        </SideBarBox>
+        </SearchbarBox>
       ) : (
-        <SideBarBox pad={{ vertical: 'medium' }}>
-          'Sidebar search and likes'
-        </SideBarBox>
+        <SearchbarBox pad={{ vertical: 'medium' }}>
+          No Search results or likes
+        </SearchbarBox>
       )}
     </Box>
   )
 }
 
-export default CocktailSidebar
+export default CocktailSearchbar

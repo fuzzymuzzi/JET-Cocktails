@@ -1,11 +1,11 @@
 import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import CocktailSidebar from './CocktailSidebar'
+import CocktailSearchbar from './CocktailSearchbar'
 import fetchMock from 'fetch-mock'
 import { expectedCocktailData, testCocktailResponse } from '../../test/data'
 
-describe('CocktailSidebar', () => {
+describe('CocktailSearchbar', () => {
   beforeEach(() => {
     fetchMock.reset()
     const defaultResponse = '[]'
@@ -14,16 +14,15 @@ describe('CocktailSidebar', () => {
     fetchMock.get('end:/list.php?g=list', defaultResponse)
   })
 
-  test('should render the sidebar message when there been no query', async () => {
-    render(<CocktailSidebar />)
-    // eslint-disable-next-line testing-library/prefer-find-by
-    const textElement = await screen.findByText(/Sidebar search and likes/)
+  test('should render the searchbar message when there been no query', async () => {
+    render(<CocktailSearchbar />)
+    const textElement = await screen.findByText(/No Search results or likes/)
     expect(textElement).toBeInTheDocument()
   })
 
   test('should render a input field', async () => {
-    render(<CocktailSidebar />)
-    const inputEl = await screen.findByTestId('sidebar-search-input')
+    render(<CocktailSearchbar />)
+    const inputEl = await screen.findByTestId('searchbar-search-input')
     expect(inputEl).toBeInTheDocument()
   })
 
@@ -32,9 +31,9 @@ describe('CocktailSidebar', () => {
     const searchIdentifier = `end:/search.php?s=${testQuery}`
     fetchMock.get(searchIdentifier, JSON.stringify(testCocktailResponse))
 
-    render(<CocktailSidebar />)
+    render(<CocktailSearchbar />)
 
-    const inputEl = await screen.findByTestId('sidebar-search-input')
+    const inputEl = await screen.findByTestId('searchbar-search-input')
     await userEvent.type(inputEl, testQuery)
 
     await waitFor(() => {
@@ -43,19 +42,19 @@ describe('CocktailSidebar', () => {
   })
 
   test('should show the filter input when the filters button is clicked', async () => {
-    render(<CocktailSidebar />)
+    render(<CocktailSearchbar />)
 
-    const filterButtonEl = await screen.findByTestId('sidebar-filter-button')
+    const filterButtonEl = await screen.findByTestId('searchbar-filter-button')
     await userEvent.click(filterButtonEl)
 
-    const filterEl = screen.queryByTestId('sidebar-filter-input')
+    const filterEl = screen.queryByTestId('searchbar-filter-input')
     expect(filterEl).toBeInTheDocument()
   })
 
   test('should NOT show the filter input when the filters button is clicked', () => {
-    render(<CocktailSidebar />)
+    render(<CocktailSearchbar />)
 
-    const filterEl = screen.queryByTestId('sidebar-filter-input')
+    const filterEl = screen.queryByTestId('searchbar-filter-input')
     expect(filterEl).not.toBeInTheDocument()
   })
 
@@ -132,34 +131,34 @@ describe('CocktailSidebar', () => {
       },
     )
 
-    render(<CocktailSidebar />)
+    render(<CocktailSearchbar />)
 
-    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    const searchInputEl = await screen.findByTestId('searchbar-search-input')
     await userEvent.type(searchInputEl, testQuery)
 
     // initial state after the search
-    let listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    let listItemEls = await screen.findAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(3)
 
     // open the filter input
-    const filterButtonEl = await screen.findByTestId('sidebar-filter-button')
+    const filterButtonEl = await screen.findByTestId('searchbar-filter-button')
     await userEvent.click(filterButtonEl)
 
     // start applying filters
-    const filterInputEl = await screen.findByTestId('sidebar-filter-input')
+    const filterInputEl = await screen.findByTestId('searchbar-filter-input')
     // apply the category filter
     await userEvent.type(filterInputEl, `${testCategoryFilter}{enter}`)
-    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    listItemEls = await screen.findAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(2)
 
     // apply the glass filter
     await userEvent.type(filterInputEl, `${testGlassFilter}{enter}`)
-    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    listItemEls = await screen.findAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(2)
 
     // apply a ingredient filter
     await userEvent.type(filterInputEl, `${testIngredientFilter}{enter}`)
-    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    listItemEls = await screen.findAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(1)
     const allMatchEl = await screen.findByText(/all-match/)
     expect(allMatchEl).toBeInTheDocument()
@@ -172,14 +171,14 @@ describe('CocktailSidebar', () => {
 
     const mockedOnCocktailSelect = jest.fn()
 
-    render(<CocktailSidebar onCocktailSelect={mockedOnCocktailSelect} />)
+    render(<CocktailSearchbar onCocktailSelect={mockedOnCocktailSelect} />)
 
     // click the item
-    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    const searchInputEl = await screen.findByTestId('searchbar-search-input')
     await userEvent.type(searchInputEl, testQuery)
 
     // click the item
-    let listItemEl = await screen.findByTestId('sidebar-search-list-item')
+    let listItemEl = await screen.findByTestId('searchbar-search-list-item')
     await userEvent.click(listItemEl)
 
     await waitFor(() => {
@@ -225,28 +224,28 @@ describe('CocktailSidebar', () => {
       },
     )
 
-    render(<CocktailSidebar />)
+    render(<CocktailSearchbar />)
 
-    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    const searchInputEl = await screen.findByTestId('searchbar-search-input')
     await userEvent.type(searchInputEl, testQuery)
 
     // initial state after the search
-    let listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    let listItemEls = await screen.findAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(2)
 
     // open the filter input
-    const filterButtonEl = await screen.findByTestId('sidebar-filter-button')
+    const filterButtonEl = await screen.findByTestId('searchbar-filter-button')
     await userEvent.click(filterButtonEl)
 
     // apply a filter
-    const filterInputEl = await screen.findByTestId('sidebar-filter-input')
+    const filterInputEl = await screen.findByTestId('searchbar-filter-input')
     await userEvent.type(filterInputEl, 'no-result-category{enter}')
-    listItemEls = screen.queryAllByTestId('sidebar-search-list-item')
+    listItemEls = screen.queryAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(0)
 
     // close the filter input
     await userEvent.click(filterButtonEl)
-    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    listItemEls = await screen.findAllByTestId('searchbar-search-list-item')
     expect(listItemEls.length).toBe(2)
   })
 })

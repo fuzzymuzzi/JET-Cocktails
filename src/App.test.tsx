@@ -22,12 +22,10 @@ describe('App', () => {
     expect(CocktailDetailWrapper).toBeInTheDocument()
   })
 
-  test('should render a cocktail sidebar', () => {
+  test('should render a cocktail searchbar', () => {
     render(<App />)
-    const CocktailSidebarWrapper = screen.getByTestId(
-      'cocktail-fragment-sidebar',
-    )
-    expect(CocktailSidebarWrapper).toBeInTheDocument()
+    const CocktailSearcbar = screen.getByTestId('cocktail-fragment-searchbar')
+    expect(CocktailSearcbar).toBeInTheDocument()
   })
 
   test('should call the provided onCocktailSelect when a search has been completed and a item is clicked', async () => {
@@ -46,12 +44,12 @@ describe('App', () => {
     render(<App />)
 
     // click the item
-    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    const searchInputEl = await screen.findByTestId('searchbar-search-input')
     await userEvent.type(searchInputEl, testQuery)
     expect(searchInputEl).toBeInTheDocument()
 
     // click the item
-    let listItemEl = await screen.findByTestId('sidebar-search-list-item')
+    let listItemEl = await screen.findByTestId('searchbar-search-list-item')
     expect(listItemEl).toBeInTheDocument()
     await userEvent.click(listItemEl)
 

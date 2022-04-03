@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 
 import { Grommet, Box } from 'grommet'
 import CocktailDetails from './CocktailDetails'
-import CocktailSidebar from './CocktailSidebar'
+import CocktailSearchbar from './CocktailSidebar'
 import ICocktail from './interfaces/ICocktail'
 
 const theme = {
@@ -38,8 +38,8 @@ const App: React.FC<unknown> = () => {
       <Box fill>
         <AppBar />
         <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
-          <CocktailSidebar
-            data-testid={'cocktail-fragment-sidebar'}
+          <CocktailSearchbar
+            data-testid={'cocktail-fragment-searchbar'}
             onCocktailSelect={cocktail => {
               setSelectedCocktail(cocktail)
             }}

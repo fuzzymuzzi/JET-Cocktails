@@ -23,7 +23,7 @@ const CocktailList: React.FC<ICocktailListProps> = ({
       margin='0'
       fill={'horizontal'}
       pad={{ horizontal: 'xsmall', vertical: 'xsmall' }}
-      data-testid={'sidebar-search-list'}
+      data-testid={'searchbar-search-list'}
     >
       {cocktails.map((cocktail: ICocktail, index: number) => {
         const { id } = cocktail
@@ -38,7 +38,7 @@ const CocktailList: React.FC<ICocktailListProps> = ({
                 selectedCocktail?.id === id ? undefined : cocktail,
               )
             }}
-            data-testid={'sidebar-search-list-item'}
+            data-testid={'searchbar-search-list-item'}
           />
         )
       })}

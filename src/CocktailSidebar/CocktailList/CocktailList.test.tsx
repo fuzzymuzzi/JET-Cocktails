@@ -48,7 +48,7 @@ const testCocktailTwo = {
 describe('CocktailList', () => {
   test('should render an ul', async () => {
     render(<CocktailList cocktails={[]} onCocktailSelect={() => {}} />)
-    const listEl = await screen.findByTestId('sidebar-search-list')
+    const listEl = await screen.findByTestId('searchbar-search-list')
     expect(listEl).toBeInTheDocument()
   })
 
@@ -59,7 +59,9 @@ describe('CocktailList', () => {
         onCocktailSelect={() => {}}
       />,
     )
-    const listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    const listItemEls = await screen.findAllByTestId(
+      'searchbar-search-list-item',
+    )
     expect(listItemEls.length).toBe(2)
 
     const listItemOneText = await screen.findByText(/Some random name/)
@@ -78,7 +80,7 @@ describe('CocktailList', () => {
       />,
     )
 
-    const listItemEl = await screen.findByTestId('sidebar-search-list-item')
+    const listItemEl = await screen.findByTestId('searchbar-search-list-item')
     await userEvent.click(listItemEl)
 
     expect(mockedOnCocktailSelect).toBeCalled()

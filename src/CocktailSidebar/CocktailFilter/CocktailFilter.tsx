@@ -1,6 +1,6 @@
 import { BoxProps } from 'grommet'
 import { useEffect, useMemo, useState } from 'react'
-import SideBarBox from '../components/SideBarBox'
+import SearchbarBox from '../components/SearchbarBox'
 import ICocktailFilters from '../interfaces/ICocktailFilters'
 import useCocktailFiltersApi from './hooks/useCocktailFiltersApi'
 import TagInput from './TagInput'
@@ -109,10 +109,10 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
   }, [selectedFilters, onFiltersChange])
 
   return hasFilters ? (
-    <SideBarBox {...props}>
+    <SearchbarBox {...props}>
       <TagInput
         placeholder='Filter ingredients, categories or glass'
-        data-testid={'sidebar-filter-input'}
+        data-testid={'searchbar-filter-input'}
         suggestions={suggestions}
         selectedTags={selectedFilters}
         onRemove={onRemoveFilter}
@@ -122,7 +122,7 @@ const CocktailFilter: React.FC<ICocktailFilterProps> = ({
         }}
         a11yTitle='Filter on Ingredients, categories or glass'
       />
-    </SideBarBox>
+    </SearchbarBox>
   ) : null
 }
 

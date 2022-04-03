@@ -1,6 +1,6 @@
 import { Box, BoxProps } from 'grommet'
 
-const SideBarBox: React.FC<BoxProps> = ({ children, ...props }) => (
+const SearchbarBox: React.FC<BoxProps> = ({ children, ...props }) => (
   <Box
     width='medium'
     align='center'
@@ -13,4 +13,4 @@ const SideBarBox: React.FC<BoxProps> = ({ children, ...props }) => (
   </Box>
 )
 
-export default SideBarBox
+export default SearchbarBox
