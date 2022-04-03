@@ -35,19 +35,30 @@ I am currently, most familar with React, so instead of spending extra time on pi
 Is just an easy and quick way to setup a simple React APP, it comes packaged with some "sensible defaults" aswell as Typescript, Jest and React-testing-library. All of which I was wanted to use anyway.
 But mostly I ended up going for CRA, as did not want to spend a lot of, my limited, time focussing on wiring up for this challenge. Should there be a desire to deviate from these CRA defaults, CRA offers an eject script which lets you parachute out of setup without breaking it as it rewires the scripts for you, which is nice and then allows for whatever custom bundling/tooling you want.
 
+#### No router
+
+Skipped a router, seemed a bit too overkill for the requirements. Went with a true true SPA
+
 ### [Grommet components](https://github.com/grommet/grommet))
 
 The components are easy to use, offer alot of basic functionality out of the box, have great a11y support aswell a couple of utils (like infinite scroller) which I might end up using here. I like and prefer it for it's component simplicity aswell as functional focus, which allows a user of the lib to primarily focus on implementing/composing the basic Grommet components into whatever they want to create. Their approach is more inline with my own view on how generic component lib should be setup, clear responsability aswell as simple while maintaining flexability.
 
 Using premade, basic, components is a big time saver, altho it does come at a potential cost (extra depedencies, "lock-in") so it might not be the best approach for every project. I went for it here, so I could instead focus more on the overall architecture and app specific components necessary to create the functional requirements of the challenge.
 
-### Testing (Jest + React-testing-library + Cypress?)
+#### Style override NOT IMPLEMENTED YET
+
+Using Grommet I set up a custom theme to make the App more JETy, should I have extra time for a bonus point. In that case I'll probably focus more on the State management
+
+### Testing (Jest + React-testing-library)
 
 Jest + React-testing-library, a common testing setup within the React community. It came with CRA, but had it not I would have still chosen to use them. I might also look into setting up Cypress for some e2e testing, but timewise I will have to see.
 
-### State management
+Comment: Ended up not using Cypress, for now atleast, mainly due to time. The good thing is that react-testing-library is, by design, already pretty integration test focussed
 
-TBD
+### App state management NOT IMPLEMENTED YET [Fluxible](https://github.com/aprilmintacpineda/fluxible-js))
+
+Not sure if i'll get to this before the deadline. But i've looked into using Fluxible, for state management, it promises a small and fast, event-driven, state management with async support aswell as persistence of state.
+Which I would use to store, and load, the Ids of the Cocktails that a user 'liked' from localStorage after which the details could then be gotten from the cocktail detail API and shown in the list, perhaps always on or with a toggle/tabs.
 
 ## Available Scripts (Bootstrapped by [Create React App](https://github.com/facebook/create-react-app))
 
