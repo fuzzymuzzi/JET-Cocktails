@@ -12,8 +12,12 @@ interface IFilterApiResponse {
 }
 
 const apiFilterToFilter = (apiFilter: any): string => {
-  const { strGlass, strIngredient, strCategory } = apiFilter
-  return strGlass || strIngredient || strCategory
+  const {
+    strGlass: glass,
+    ['strIngredient1']: ingredient,
+    strCategory: category,
+  } = apiFilter
+  return glass || ingredient || category
 }
 
 const filterConvertor = (data: IFilterApiResponse): string[] => {
