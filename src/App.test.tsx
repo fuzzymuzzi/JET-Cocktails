@@ -43,8 +43,6 @@ describe('App', () => {
       }),
     )
 
-    console.log({ ...testCocktailResponse, strDrink: testName })
-
     render(<App />)
 
     // click the item

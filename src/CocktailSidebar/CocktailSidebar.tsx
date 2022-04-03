@@ -111,7 +111,7 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
       }}
       {...props}
     >
-      <SideBarBox>
+      <SideBarBox gap='small'>
         <TextInput
           placeholder='Search for cocktails'
           data-testid={'sidebar-search-input'}
