@@ -1,3 +1,4 @@
+import { isNil } from 'lodash'
 import ICocktail from '../../interfaces/ICocktail'
 import IApiCocktail from './interfaces/IApiCocktail'
 import IApiResponse from './interfaces/IApiResponse'
@@ -5,8 +6,6 @@ import IApiResponse from './interfaces/IApiResponse'
 const splitStr = (string: string) => string.split('str')[1] || ''
 const lowerCaseFirst = (string: string) =>
   string.charAt(0).toLowerCase().concat(string.slice(1))
-
-const isNil = (value: unknown): boolean => value == null
 
 const apiCocktailToCocktail = (apiCocktail: IApiCocktail): ICocktail => {
   const { strDrink, idDrink, ...rest } = apiCocktail
@@ -53,9 +52,10 @@ const apiCocktailToCocktail = (apiCocktail: IApiCocktail): ICocktail => {
 }
 
 const cocktailConvertor = (data: IApiResponse): ICocktail[] => {
-  const { drinks: apiDrinks = [] } = isNil(data) ? {} : data
-
-  return apiDrinks.map(apiCocktailToCocktail)
+  if (!data || !data.drinks) {
+    return []
+  }
+  return data.drinks.map(apiCocktailToCocktail)
 }
 
 export default cocktailConvertor
