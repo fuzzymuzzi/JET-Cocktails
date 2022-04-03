@@ -1,11 +1,28 @@
-import { Box } from 'grommet'
+import { Box, Heading } from 'grommet'
+import ICocktail from '../interfaces/ICocktail'
 
-interface ICocktailDetailsProps {}
+interface ICocktailDetailsProps {
+  selectedCocktail?: ICocktail
+}
 
-const CocktailDetails: React.FC<ICocktailDetailsProps> = props => {
+const CocktailDetails: React.FC<ICocktailDetailsProps> = ({
+  selectedCocktail: cocktail,
+  ...props
+}) => {
+  const hasCocktail = !!cocktail
+  console.log({ cocktail })
+
   return (
     <Box flex align='center' justify='center' {...props}>
-      Yay Cocktails!
+      <Box direction='column' pad='large' fill align='center'>
+        {hasCocktail ? (
+          <>
+            <Heading margin='none'>{cocktail.name}</Heading>
+          </>
+        ) : (
+          'Yay Cocktails!'
+        )}
+      </Box>
     </Box>
   )
 }
