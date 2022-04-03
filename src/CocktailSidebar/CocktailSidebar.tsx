@@ -1,5 +1,5 @@
 import { Box, BoxProps, TextInput, Spinner } from 'grommet'
-import { Search } from 'grommet-icons'
+import { Filter, Search } from 'grommet-icons'
 import { useEffect, useMemo, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
@@ -56,6 +56,8 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
   const hasCocktails = cocktailOptions.length > 0
   const [selectedCocktail, setSelectedCocktail] = useState<ICocktail>()
 
+  const [hasFilters, setHasFilters] = useState(false)
+
   return (
     <Box
       width='medium'
@@ -83,6 +85,28 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
             setQuery(event.target.value)
           }}
         />
+        <Box
+          hoverIndicator
+          a11yTitle='filter cocktail'
+          role={'button'}
+          onClick={() => {
+            setHasFilters(!hasFilters)
+          }}
+          data-testid={'sidebar-filter-button'}
+        >
+          <Filter color={hasFilters ? 'brand' : ''} />
+        </Box>
+      </SideBarBox>
+      <SideBarBox>
+        {hasFilters ? (
+          <TextInput
+            placeholder='Ingredients, categories or glass'
+            data-testid={'sidebar-filter-input'}
+            value={''}
+            icon={<Filter />}
+            onChange={event => {}}
+          />
+        ) : null}
       </SideBarBox>
       {isFetching ? (
         <SideBarBox pad={{ vertical: 'medium' }}>

@@ -37,4 +37,21 @@ describe('CocktailSidebar', () => {
       expect(fetchMock.mock().called(searchIdentifier)).toBe(true)
     })
   })
+
+  test('should show the filter input when the filters button is clicked', async () => {
+    render(<CocktailSidebar />)
+
+    const filterButtonEl = await screen.findByTestId('sidebar-filter-button')
+    await userEvent.click(filterButtonEl)
+
+    const filterEl = screen.queryByTestId('sidebar-filter-input')
+    expect(filterEl).toBeInTheDocument()
+  })
+
+  test('should NOT show the filter input when the filters button is clicked', () => {
+    render(<CocktailSidebar />)
+
+    const filterEl = screen.queryByTestId('sidebar-filter-input')
+    expect(filterEl).not.toBeInTheDocument()
+  })
 })
