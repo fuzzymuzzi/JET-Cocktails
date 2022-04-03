@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { Grommet, Box } from 'grommet'
 import CocktailDetails from './CocktailDetails'
 import CocktailSidebar from './CocktailSidebar'
+import ICocktail from './interfaces/ICocktail'
 
 const theme = {
   global: {
@@ -30,13 +31,23 @@ const AppBar: React.FC<any> = props => (
 )
 
 const App: React.FC<unknown> = () => {
+  const [selectedCocktail, setSelectedCocktail] = useState<ICocktail>()
+
   return (
     <Grommet theme={theme} full>
       <Box fill>
         <AppBar />
         <Box direction='row' flex overflow={{ horizontal: 'hidden' }}>
-          <CocktailSidebar data-testid={'cocktail-fragment-sidebar'} />
-          <CocktailDetails data-testid={'cocktail-fragment-details'} />
+          <CocktailSidebar
+            data-testid={'cocktail-fragment-sidebar'}
+            onCocktailSelect={cocktail => {
+              setSelectedCocktail(cocktail)
+            }}
+          />
+          <CocktailDetails
+            data-testid={'cocktail-fragment-details'}
+            selectedCocktail={selectedCocktail}
+          />
         </Box>
       </Box>
     </Grommet>
