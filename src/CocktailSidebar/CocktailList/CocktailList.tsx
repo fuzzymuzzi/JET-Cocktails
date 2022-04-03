@@ -1,5 +1,5 @@
 import { Box, BoxProps } from 'grommet'
-import ICocktail from '../interfaces/ICocktail'
+import ICocktail from '../../interfaces/ICocktail'
 import CocktailItem from './CocktailItem'
 
 interface ICocktailListProps extends BoxProps {

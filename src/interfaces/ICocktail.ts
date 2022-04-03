@@ -1,4 +1,4 @@
-import IInstruction from './IInstruction'
+import IInstruction from '../CocktailSidebar/interfaces/IInstruction'
 
 interface ICocktail {
   id: string

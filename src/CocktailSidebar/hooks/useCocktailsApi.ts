@@ -1,4 +1,4 @@
-import ICocktail from '../interfaces/ICocktail'
+import ICocktail from '../../interfaces/ICocktail'
 import cocktailConvertor from '../utils/cocktailConverter'
 
 import useFetchApi from '../../hooks/useFetchApi'

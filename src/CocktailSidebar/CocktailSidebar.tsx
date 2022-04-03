@@ -2,7 +2,7 @@ import { Box, TextInput, Spinner } from 'grommet'
 import { Filter, Search } from 'grommet-icons'
 import { useEffect, useMemo, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
-import ICocktail from './interfaces/ICocktail'
+import ICocktail from '../interfaces/ICocktail'
 import constructDebouncedCall from '../utils/constructDebouncedCall'
 import CocktailList from './CocktailList'
 import SideBarBox from './components/SideBarBox'
@@ -10,10 +10,13 @@ import CocktailFilter from './CocktailFilter'
 import ICocktailFilters from './interfaces/ICocktailFilters'
 
 interface ICocktailSidebarProps {
-  onCocktailSelect?: (selectedCocktail: unknown) => {}
+  onCocktailSelect?: (selectedCocktail: ICocktail) => void
 }
 
-const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
+const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
+  onCocktailSelect,
+  ...props
+}) => {
   const [cocktailOptions, setCocktailOptions] = useState([] as ICocktail[])
   const [query, setQuery] = useState('')
   const [isFetching, setIsFetching] = useState(false)
@@ -142,7 +145,12 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
           <CocktailList
             cocktails={filteredCocktailOptions}
             selectedCocktail={selectedCocktail}
-            onCocktailSelect={setSelectedCocktail}
+            onCocktailSelect={selectedCocktail => {
+              setSelectedCocktail(selectedCocktail)
+              if (selectedCocktail && onCocktailSelect) {
+                onCocktailSelect(selectedCocktail)
+              }
+            }}
           />
         </SideBarBox>
       ) : (

@@ -1,5 +1,5 @@
 import { isNil } from 'lodash'
-import ICocktail from '../../interfaces/ICocktail'
+import ICocktail from '../../../interfaces/ICocktail'
 import IApiCocktail from './interfaces/IApiCocktail'
 import IApiResponse from './interfaces/IApiResponse'
 

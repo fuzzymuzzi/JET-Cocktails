@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import CocktailSidebar from './CocktailSidebar'
 import fetchMock from 'fetch-mock'
-import { testCocktailResponse } from '../../test/data'
+import { expectedCocktailData, testCocktailResponse } from '../../test/data'
 
 describe('CocktailSidebar', () => {
   beforeEach(() => {
@@ -163,5 +163,29 @@ describe('CocktailSidebar', () => {
     expect(listItemEls.length).toBe(1)
     const allMatchEl = await screen.findByText(/all-match/)
     expect(allMatchEl).toBeInTheDocument()
+  })
+
+  test('should call the provided onCocktailSelect when a search has been completed and a item is clicked', async () => {
+    const testQuery = 'test'
+    const searchIdentifier = `end:/search.php?s=${testQuery}`
+    fetchMock.get(searchIdentifier, JSON.stringify(testCocktailResponse))
+
+    const mockedOnCocktailSelect = jest.fn()
+
+    render(<CocktailSidebar onCocktailSelect={mockedOnCocktailSelect} />)
+
+    // click the item
+    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    await userEvent.type(searchInputEl, testQuery)
+
+    // click the item
+    let listItemEl = await screen.findByTestId('sidebar-search-list-item')
+    await userEvent.click(listItemEl)
+
+    await waitFor(() => {
+      expect(mockedOnCocktailSelect).toHaveBeenCalledWith(
+        expectedCocktailData[0],
+      )
+    })
   })
 })

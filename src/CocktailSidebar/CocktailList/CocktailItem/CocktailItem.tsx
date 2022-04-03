@@ -1,5 +1,5 @@
 import { Box, Text, Avatar, BoxProps } from 'grommet'
-import ICocktail from '../../interfaces/ICocktail'
+import ICocktail from '../../../interfaces/ICocktail'
 
 interface ICocktailItemProps extends BoxProps {
   isSelected: boolean
