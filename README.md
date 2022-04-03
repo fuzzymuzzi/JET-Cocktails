@@ -7,20 +7,20 @@
 This app's structure will mainly follow the following structure:
 
 - RootComponent folder
-  -- index.tsx
-  -- RootComponent.tsx
-  -- components/  
-  --- will contain all generic, shared, components for this level, and below
-  -- utils/
-  --- will contain all utils for this level, and below
-  -- hooks/
-  --- will contain all hooks for this level, and below
-  -- interfaces/
-  --- will contain all interfaces for this level, and below
-  -- enums
-  --- will contain all enums for this level, and below
-  -- {NameOfRootComponentFragment}/
-  --- will essentially contain a repeat of the structure above (if applicable), but this time scoped on the ComponentFragment (e.g a Header, or Footer or something more specifc, Favorite list)
+  - index.tsx
+  - RootComponent.tsx
+  - components/
+    - will contain all generic, shared, components for this level, and below
+  - utils/
+    - will contain all utils for this level, and below
+  - hooks/
+    - will contain all hooks for this level, and below
+  - interfaces/
+    - will contain all interfaces for this level, and below
+  - enums/
+    - will contain all enums for this level, and below
+  - {NameOfRootComponentFragment}/
+    - will essentially contain a repeat of the structure above (if applicable), but this time scoped on the ComponentFragment (e.g a Header, or Footer or something more specifc, Favorite list)
 
 Setting up the project likes this is intended to give an easier overview of where certain code "lives", it allows for a logical division of code aswell as grouping the code as close as possible to where it is being used.
 Promoting some code up into a shared piece is fairly straightforward. Asking the question "Is this piece code shared with multiple of my Fragments?" If yes move it up, until it no longer is shared above that level. Sometimes something is so obviously generic that it doesn't really have a home except at the top. (these should remain relatively rare/low in number in the grand scheme of things)
