@@ -188,4 +188,65 @@ describe('CocktailSidebar', () => {
       )
     })
   })
+
+  test('should not filter the cocktails when a search has been completed, filter(s) have been applied but the filter input is hidden', async () => {
+    const testResponse = {
+      drinks: [
+        {
+          idDrink: '1337',
+          strDrink: 'some-match',
+          strCategory: 'some-category',
+          strGlass: 'some-glass',
+          strIngredient1: 'Ingredient 1',
+        },
+        {
+          idDrink: '42',
+          strDrink: 'another-match',
+          strCategory: 'another-category',
+          strGlass: 'a-glass',
+          strIngredient1: 'Ingredient 2',
+        },
+      ],
+    }
+    const testQuery = 'test'
+    const searchIdentifier = `end:/search.php?s=${testQuery}`
+    fetchMock.get(searchIdentifier, JSON.stringify(testResponse))
+    fetchMock.get(
+      'end:/list.php?c=list',
+      JSON.stringify({
+        drinks: [
+          {
+            strCategory: 'no-result-category',
+          },
+        ],
+      }),
+      {
+        overwriteRoutes: true,
+      },
+    )
+
+    render(<CocktailSidebar />)
+
+    const searchInputEl = await screen.findByTestId('sidebar-search-input')
+    await userEvent.type(searchInputEl, testQuery)
+
+    // initial state after the search
+    let listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(2)
+
+    // open the filter input
+    const filterButtonEl = await screen.findByTestId('sidebar-filter-button')
+    await userEvent.click(filterButtonEl)
+
+    // apply a filter
+    const filterInputEl = await screen.findByTestId('sidebar-filter-input')
+    await userEvent.type(filterInputEl, 'no-result-category{enter}')
+    listItemEls = screen.queryAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(0)
+
+    // close the filter input
+    await userEvent.click(filterButtonEl)
+    listItemEls = await screen.findAllByTestId('sidebar-search-list-item')
+    expect(listItemEls.length).toBe(2)
+  })
 })

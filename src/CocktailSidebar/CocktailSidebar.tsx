@@ -58,34 +58,40 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = ({
 
   const filteredCocktailOptions = useMemo(
     () =>
-      cocktailOptions.filter(cocktail => {
-        const {
-          ingredient: ingredientFilters,
-          glass: glassFilters,
-          category: categoryFilters,
-        } = selectedFilters
+      hasFilters
+        ? cocktailOptions.filter(cocktail => {
+            const {
+              ingredient: ingredientFilters,
+              glass: glassFilters,
+              category: categoryFilters,
+            } = selectedFilters
 
-        const hasIngredientFilters = ingredientFilters.length > 0
-        const hasCategoryFilters = categoryFilters.length > 0
-        const hasGlassFilters = glassFilters.length > 0
+            const hasIngredientFilters = ingredientFilters.length > 0
+            const hasCategoryFilters = categoryFilters.length > 0
+            const hasGlassFilters = glassFilters.length > 0
 
-        let filters = []
+            let filterEvals = []
 
-        if (hasCategoryFilters) {
-          filters.push(categoryFilters.includes(cocktail.category || ''))
-        }
-        if (hasGlassFilters) {
-          filters.push(glassFilters.includes(cocktail.glass || ''))
-        }
-        if (hasIngredientFilters) {
-          ingredientFilters.forEach(filter => {
-            filters.push(cocktail.ingredients.includes(filter))
+            if (hasCategoryFilters) {
+              filterEvals.push(
+                categoryFilters.includes(cocktail.category || ''),
+              )
+            }
+            if (hasGlassFilters) {
+              filterEvals.push(glassFilters.includes(cocktail.glass || ''))
+            }
+            if (hasIngredientFilters) {
+              ingredientFilters.forEach(filter => {
+                filterEvals.push(cocktail.ingredients.includes(filter))
+              })
+            }
+
+            return filterEvals.length > 0
+              ? filterEvals.every(v => v === true)
+              : true
           })
-        }
-
-        return filters.length > 0 ? filters.every(v => v === true) : true
-      }),
-    [cocktailOptions, selectedFilters],
+        : cocktailOptions,
+    [cocktailOptions, selectedFilters, hasFilters],
   )
 
   return (
