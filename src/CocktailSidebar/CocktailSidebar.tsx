@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
 import constructDebouncedCall from '../utils/constructDebouncedCall'
+import CocktailList from './CocktailList'
 
 interface ICocktailSidebarProps {
   onCocktailSelect?: (selectedCocktail: unknown) => {}
@@ -15,6 +16,7 @@ const SideBarBox: React.FC<BoxProps> = ({ children, ...props }) => (
     align='center'
     justify='center'
     direction='row'
+    flex={false}
     {...props}
   >
     {children}
@@ -31,6 +33,7 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
   const getCocktailsByQuery = useMemo(
     () =>
       constructDebouncedCall(async (query: string) => {
+        setSelectedCocktail(undefined)
         setIsFetching(true)
         try {
           const cocktails = await api.getCocktailsByQuery(query)
@@ -50,7 +53,8 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
     }
   }, [getCocktailsByQuery, query])
 
-  console.log({ cocktailOptions })
+  const hasCocktails = cocktailOptions.length > 0
+  const [selectedCocktail, setSelectedCocktail] = useState<ICocktail>()
 
   return (
     <Box
@@ -60,6 +64,13 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
       align='center'
       justify='start'
       pad={{ left: 'medium', right: 'medium', vertical: 'large' }}
+      gap={'medium'}
+      fill={'vertical'}
+      flex={false}
+      overflow={{
+        vertical: 'auto',
+        horizontal: 'hidden',
+      }}
       {...props}
     >
       <SideBarBox>
@@ -73,17 +84,28 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
           }}
         />
       </SideBarBox>
-      <SideBarBox pad={{ vertical: 'medium' }}>
-        {isFetching ? (
+      {isFetching ? (
+        <SideBarBox pad={{ vertical: 'medium' }}>
           <Spinner
             data-testid={'sidebar-search-spinner'}
             size={'large'}
             message={`Looking for cocktails containing "${query}"`}
           />
-        ) : (
+        </SideBarBox>
+      ) : null}
+      {!isFetching && hasCocktails ? (
+        <SideBarBox fill={'horizontal'} direction='column' flex={false}>
+          <CocktailList
+            cocktails={cocktailOptions}
+            selectedCocktail={selectedCocktail}
+            onCocktailSelect={setSelectedCocktail}
+          />
+        </SideBarBox>
+      ) : (
+        <SideBarBox pad={{ vertical: 'medium' }}>
           'Sidebar search and likes'
-        )}
-      </SideBarBox>
+        </SideBarBox>
+      )}
     </Box>
   )
 }
