@@ -1,27 +1,15 @@
-import { Box, BoxProps, TextInput, Spinner } from 'grommet'
+import { Box, TextInput, Spinner } from 'grommet'
 import { Filter, Search } from 'grommet-icons'
 import { useEffect, useMemo, useState } from 'react'
 import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
 import constructDebouncedCall from '../utils/constructDebouncedCall'
 import CocktailList from './CocktailList'
+import { SideBarBox } from './components'
 
 interface ICocktailSidebarProps {
   onCocktailSelect?: (selectedCocktail: unknown) => {}
 }
-
-const SideBarBox: React.FC<BoxProps> = ({ children, ...props }) => (
-  <Box
-    width='medium'
-    align='center'
-    justify='center'
-    direction='row'
-    flex={false}
-    {...props}
-  >
-    {children}
-  </Box>
-)
 
 const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
   const [cocktailOptions, setCocktailOptions] = useState([] as ICocktail[])
