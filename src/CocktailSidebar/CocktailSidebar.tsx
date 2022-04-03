@@ -5,7 +5,8 @@ import useCocktailsApi from './hooks/useCocktailsApi'
 import ICocktail from './interfaces/ICocktail'
 import constructDebouncedCall from '../utils/constructDebouncedCall'
 import CocktailList from './CocktailList'
-import { SideBarBox } from './components'
+import SideBarBox from './components/SideBarBox'
+import CocktailFilter from './CocktailFilter'
 
 interface ICocktailSidebarProps {
   onCocktailSelect?: (selectedCocktail: unknown) => {}
@@ -85,17 +86,7 @@ const CocktailSidebar: React.FC<ICocktailSidebarProps> = props => {
           <Filter color={hasFilters ? 'brand' : ''} />
         </Box>
       </SideBarBox>
-      <SideBarBox>
-        {hasFilters ? (
-          <TextInput
-            placeholder='Ingredients, categories or glass'
-            data-testid={'sidebar-filter-input'}
-            value={''}
-            icon={<Filter />}
-            onChange={event => {}}
-          />
-        ) : null}
-      </SideBarBox>
+      <CocktailFilter hasFilters={hasFilters} />
       {isFetching ? (
         <SideBarBox pad={{ vertical: 'medium' }}>
           <Spinner
