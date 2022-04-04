@@ -39,6 +39,14 @@ But mostly I ended up going for CRA, as did not want to spend a lot of, my limit
 
 Skipped a router, seemed a bit too overkill for the requirements. Went with a true true SPA
 
+#### React custom hooks
+
+Allow a dev to effectively use state and other React features without having to write a component class or function for it. This allows you to effectively share logic between multiple components with the caveat that they must start with 'use', cannot be used conditionally called (when applied in a component), aswell as that the component used must be a functional component. They can be built up on top of eachother aswell, which can be used to allow for some cool compoisitions. One could start out with some generic shared functionality and then layer/build more specific shareable logic on the top of that.
+
+I've used custom hooks here mainly to construct sets of preconfigured api calls. (useXApi) Primarily for grouping the similar apis and their handling together where, applicable. I could identify, 2 main groups, being getting and dealing with cocktail data, aswell as getting an dealing with cocktail filter data.
+
+These more specific custom hooks are in turn built on top of a more generic useFetchApi hook, that knows less about the context that it will be used in. Generic code like this, could easiliy be part of a wider generic libary, not necessarily contained within this project, but all that was overkill right now. The more generic variant also allows for the overrideing of the call options, with which requests can be tweaked (like alternate caching etc.) on per use basis.
+
 ### [Grommet components](https://github.com/grommet/grommet))
 
 The components are easy to use, offer alot of basic functionality out of the box, have great a11y support aswell a couple of utils (like infinite scroller) which I might end up using here. I like and prefer it for it's component simplicity aswell as functional focus, which allows a user of the lib to primarily focus on implementing/composing the basic Grommet components into whatever they want to create. Their approach is more inline with my own view on how generic component lib should be setup, clear responsability aswell as simple while maintaining flexability.
@@ -59,6 +67,14 @@ Comment: Ended up not using Cypress, for now atleast, mainly due to time. The go
 
 Not sure if i'll get to this before the deadline. But i've looked into using Fluxible, for state management, it promises a small and fast, event-driven, state management with async support aswell as persistence of state.
 Which I would use to store, and load, the Ids of the Cocktails that a user 'liked' from localStorage after which the details could then be gotten from the cocktail detail API and shown in the list, perhaps always on or with a toggle/tabs.
+
+#### API data
+
+I've chosen to place some convertors there where the API data enters the App, to ensure that there is a disconnect between the API and APP when it comes to the data. This allows for the app to remain consistent internally when thinking/talking about data. As long as whichever API is being used is converted to the expected format there should be no issue. This also allows for the eventuallity of swapping out an API or allows for multiple data sets being used. While that was a major reason to put something between it all another big reason was that when looking at the data I judged it rather messy. I figured it was going to be extremely annoying to cleanly deal with, so instead of dealing with it X times, I decided to deal with it once at the converter level. This allowed me to gather multiple thigs into arrays (like ingredients, measurements, tags etc.) aswell as rename some keys to better, and cleanly, describe their purpose. Should there ever be a need for a reversal i.e. sending of APP data to an api, a reverse converter could then be written to solve the same issue.
+
+When it comes to the App's state management, I decided to, for the most part, keep the data there where the responsibility of that data lies. So for instance. The App.tsx, at it's highest level, given the requirements, does not need to know all of the cocktails that I just recieved from my query in the CocktailSearcbar.tsx. The getting and showing of that data is the responsiblity of the CocktailSearcbar component, so as such the data should probably remain there, until a case comes up where the data is required across components.
+
+An example of this occuring is the selectedCocktail state. While the CocktailSearcbar needs to know what cocktail has been selected, the CocktailDetails components will also need to know what cocktail has been selected. They both share the same parent, so instead of adding alot of app wide structure for something relatively trivial I decided that their linking pin, the App.tsx, should just be notified by the CocktailSearcbar when the selectedCocktail had changed so that the App.tsx could keep that piece of state aswell and pass it down to it's child (CocktailDetails). This does result in the selectedCocktail technically existing in two pieces of app state, but that seemed a worthwile trade-off. It also allowed for a small disconnect between the CocktailSearcbar, resetting the selected cocktail, when starting a new search, and the CocktailDetails still showing the "previously selected cocktail" which I thought was neat.
 
 ## Available Scripts (Bootstrapped by [Create React App](https://github.com/facebook/create-react-app))
 
